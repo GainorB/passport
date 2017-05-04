@@ -1,0 +1,10 @@
+<% include ../partials/boilerplate %>
+
+<form method='POST' action='/quotes/<%= id %>?_method=PUT'>
+  <input name='content' type='text' value='<%= quote.content %>' />
+  <input name='author' type='text' value='<%= quote.author %>' />
+  <input name='genre_id' type='text' value='<%= quote.genre_id %>' />
+  <input type='submit' value='Edit it!' />
+</form>
+<script src="/static/js/main.js"></script>
+<% include ../partials/end %>

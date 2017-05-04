@@ -1,0 +1,13 @@
+<% include ../partials/boilerplate %>
+
+  <div class='single-quote'>
+    <h3><%= quote.content %></h3>
+    <div class='meta'>
+      <span class='author'><%= quote.author %></span>
+      <span class='genre'><%= quote.genre_id %></span>
+    </div>
+  </div>
+
+  <a href='/quotes'>Return to quotes index</a>
+
+<% include ../partials/end %>
