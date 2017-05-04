@@ -130,7 +130,6 @@ module.exports = () => {
 
 ### local.js
 
-Compare this version of the `local.js` file with the one from the fazbook_auth lecture. Add comments to explain the adjustments made. Add the following code:
 
 ```javascript
 const passport = require('passport');
@@ -255,7 +254,7 @@ For now it will always `return next()`. Let's add our route to actually register
 
 ### POST /auth/register
 
-When the user posts to the `/auth/register` route, the browser will send all the data contained in the form field to our express server. Our route middleware will then create a new user with that data. This route and the helper function have been refactored. Take note of the changes from the fazbook_auth tutorial! Add the following code to the `routes/auth.js` file:
+When the user posts to the `/auth/register` route, the browser will send all the data contained in the form field to our express server. Our route middleware will then create a new user with that data. This route and the helper function have been refactored. Add the following code to the `routes/auth.js` file:
 
 ```javascript
 router.post('/register', (req, res, next)  => {
