@@ -8,14 +8,13 @@ authRouter.get('/login', authHelpers.loginRedirect, (req, res) => {
   res.render('auth/login');
 });
 
-authRouter.get('/register', (req, res) => {
+authRouter.get('/register', authHelpers.loginRedirect, (req, res) => {
   res.render('auth/register');
 });
 
 authRouter.post('/register', (req, res, next) => {
   authHelpers.createNewUser(req, res)
   .then((user) => {
-    console.log(user);
     req.login(user, (err) => {
       if (err) return next(err);
       res.redirect('/user');

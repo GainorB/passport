@@ -144,9 +144,9 @@ const User = require('../../models/user');
 
 module.exports = () => {
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.username);
   });
-
+  
   passport.deserializeUser((username, done) => {
     User.findByUserName(username)
       .then(user => {
@@ -169,7 +169,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const init = require('./passport');
 const User = require('../../models/user');
-const authHelpers = require('./authHelpers');
+const authHelpers = require('./auth-helpers');
 
 const options = {};
 
@@ -189,6 +189,7 @@ passport.use(
         }
       })
       .catch(err => {
+        console.log(err);
         return done(err);
       });
   })
@@ -203,16 +204,20 @@ module.exports = passport;
 
 ### GET /auth/register
 
-Now lets add the ability to register users. To do that we first need a registration form and a register route. In the routes directory, add `auth.js`. Add the following code:
+Now lets add the ability to register users. To do that we first need a registration form and a register route. In the routes directory, add `authRoutes.js`. Add the following code:
 
 ```javascript
 const express = require('express');
-const router = express.Router();
+const authRouter = express.Router();
+const passport = require('../services/auth/local');
+const authHelpers = require('../services/auth/auth-helpers');
 
-const authHelpers = require('../auth/auth-helpers');
-const passport = require('../auth/local');
 
-router.get('/register', authHelpers.loginRedirect, (req, res)=> {
+authRouter.get('/login', authHelpers.loginRedirect, (req, res) => {
+  res.render('auth/login');
+});
+
+authRouter.get('/register', authHelpers.loginRedirect, (req, res) => {
   res.render('auth/register');
 });
 ```
@@ -308,14 +313,20 @@ module.exports = authRouter;
 Now that users can log in, we'll give them a user profile page. Let's add the following code to `routes/users`:
 
 ```javascript
-router.get('/', authHelpers.loginRequired, (req, res, next) => {
-  res.render('user/index', {
-    user: req.user.dataValues
-  });
+const express = require('express');
+const userRoutes = express.Router();
+const authHelpers = require('../services/auth/auth-helpers');
+
+/* GET users listing. */
+
+userRoutes.get('/', authHelpers.loginRequired, (req, res) => {
+  res.json({ user: 'user profile page placeholder', userInfo: req.user });
 });
+
+module.exports = userRoutes;
 ```
 
-We have a new auth helper method here. This, rather than redirecting logged in users, will redirect users that aren't logged in. We're protecting this route. Again, the auth helper is middleware. If the user isn't logged in, they get an error, if they are logged in, the helper function calls `next()` where, according to the route, they get redirected to a user profile page that includes their own user data, to be displayed. Add the following code to the `auth/auth-helpers` files:
+We have a new auth helper method here. This, rather than redirecting logged in users, will redirect users that aren't logged in. We're protecting this route. Again, the auth helper is middleware. If the user isn't logged in, they get an error, if they are logged in, the helper function calls `next()` where, according to the route, they get redirected to a user profile page that includes their own user data, to be displayed. Add the following code to the `services/auth/auth-helpers` file:
 
 ```javascript
 function loginRequired(req, res, next) {
