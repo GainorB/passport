@@ -16,7 +16,7 @@ In a new migration file in `db/migrations`:
 
 ```sql
 # filename migration_[current-date].sql
-\connect adaquote_development
+\connect [your_database_here]
 
 CREATE TABLE IF NOT EXISTS users (
   id BIGSERIAL PRIMARY KEY,
